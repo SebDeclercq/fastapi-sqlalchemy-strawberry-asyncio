@@ -17,7 +17,7 @@ from .._private.types import AsyncSessionMaker
 __all__: list[str] = ["MyDb", "start_db"]
 
 
-async def start_db(db_url: str, in_memory_db: bool) -> MyDb:
+async def start_db(db_url: str) -> MyDb:
     db: MyDb = MyDb(db_url=db_url)
     await db.connect()
     return db

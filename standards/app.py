@@ -8,16 +8,16 @@ from .db import MyDb
 from .db.models import File, Standard
 
 
-__all__: list[str] = ["start_api", "MyAPI"]
+__all__: list[str] = ["start_app", "MyApp"]
 
 
-async def start_api(db: MyDb, schema: strawberry.Schema) -> FastAPI:
-    api: MyAPI = MyAPI(api=FastAPI(), db=db, graphql_schema=schema)
+async def start_app(fastapi: FastAPI, db: MyDb, schema: strawberry.Schema) -> FastAPI:
+    api: MyApp = MyApp(api=fastapi, db=db, graphql_schema=schema)
     await api.setup()
     return api  # type: ignore # this isn't true with MyAPI.__call__
 
 
-class MyAPI(pydantic.BaseModel):
+class MyApp(pydantic.BaseModel):
     api: FastAPI
     db: MyDb
     graphql_schema: strawberry.Schema
