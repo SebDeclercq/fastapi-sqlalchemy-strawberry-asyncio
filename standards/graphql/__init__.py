@@ -2,7 +2,8 @@ import strawberry
 from .queries import Query
 
 
-__all__: list[str] = ["schema"]
+__all__: list[str] = ["get_schema"]
 
 
-schema: strawberry.Schema = strawberry.Schema(Query)
+def get_schema() -> strawberry.Schema:
+    return strawberry.Schema(Query)
