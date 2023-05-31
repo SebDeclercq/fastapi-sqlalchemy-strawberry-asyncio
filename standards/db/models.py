@@ -20,6 +20,9 @@ class Standard(Base):
         back_populates="standard", cascade="all, delete-orphan"
     )
 
+    def __repr__(self) -> str:
+        return f"Standard(numdos={self.numdos}, files={self.files})"
+
 
 class File(Base):
     __tablename__: str = "files"
@@ -35,3 +38,6 @@ class File(Base):
             "SUBSTRING(numdosvl, 2, 1) = SUBSTRING(numdos, 2, 1)",
         )
     )
+
+    def __repr__(self) -> str:
+        return f"File(numdos={self.numdos}, numdosvl={self.numdosvl}, name={self.name})"
