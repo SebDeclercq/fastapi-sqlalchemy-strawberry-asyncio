@@ -1,0 +1,7 @@
+aiosqlite
+fastapi
+httpx
+ipython
+strawberry-graphql[fastapi]
+uvicorn[standard]
+SQLAlchemy
