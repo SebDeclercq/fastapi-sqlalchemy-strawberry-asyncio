@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import pydantic
-from ._pydantic import Config as _PydanticConfig
+from ._private.pydantic import Config as _PydanticConfig
 
 
 __all__: list[str] = ["start_api", "MyAPI"]
