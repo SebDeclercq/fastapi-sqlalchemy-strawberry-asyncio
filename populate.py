@@ -37,7 +37,7 @@ async def populate_data(async_session: AsyncSession, fake: Faker) -> None:
                 file = File(
                     name=fake.file_name(),
                     numdosvl=standard.numdos[0]
-                    + str(fake.random_number(digits=6))
+                    + random.choice([standard.numdos[1], "E"])
                     + standard.numdos[2:],
                     numdos=standard.numdos,
                 )

@@ -49,7 +49,7 @@ class File(Base):
 
     __table_args__: tuple[CheckConstraint, ...] = tuple(
         CheckConstraint(
-            "SUBSTRING(numdosvl, 2, 1) = SUBSTRING(numdos, 2, 1)",
+            r"REGEXP_REPLACE(numdos, '^(.).(.*)$', '\1\2') = REGEXP_REPLACE(numdosvl, '^(.).(.*)$', '\1\2'))"
         )
     )
 
