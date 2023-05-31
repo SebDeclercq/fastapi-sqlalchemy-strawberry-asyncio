@@ -1,5 +1,7 @@
-from fastapi import Depends, FastAPI
 import pydantic
+from fastapi import FastAPI
+import strawberry
+from strawberry.fastapi import GraphQLRouter
 from ._private.pydantic import Config as _PydanticConfig
 from .db import MyDb
 from .db.models import Standard
@@ -8,8 +10,8 @@ from .db.models import Standard
 __all__: list[str] = ["start_api", "MyAPI"]
 
 
-async def start_api(db: MyDb) -> FastAPI:
-    api: MyAPI = MyAPI(api=FastAPI(), db=db)
+async def start_api(db: MyDb, schema: strawberry.Schema) -> FastAPI:
+    api: MyAPI = MyAPI(api=FastAPI(), db=db, graphql_schema=schema)
     await api.setup()
     return api  # type: ignore # this isn't true with MyAPI.__call__
 
@@ -17,6 +19,7 @@ async def start_api(db: MyDb) -> FastAPI:
 class MyAPI(pydantic.BaseModel):
     api: FastAPI
     db: MyDb
+    graphql_schema: strawberry.Schema
 
     Config = _PydanticConfig
 
@@ -26,6 +29,7 @@ class MyAPI(pydantic.BaseModel):
     async def setup(self) -> None:
         await self._setup_handlers()
         await self._setup_routes()
+        await self._setup_graphql()
 
     async def _setup_handlers(self) -> None:
         self.api.add_event_handler("startup", self._startup)
@@ -37,11 +41,15 @@ class MyAPI(pydantic.BaseModel):
             return f"Hello {name.title()}!"
 
         @self.api.get("/standard/{numdos}")
-        async def get_standard(
-            numdos: str, depends=Depends(self.db.get_session)
-        ) -> str:
+        async def get_standard(numdos: str) -> str:
             standard: Standard | None = await self.db.get_standard(numdos)
             return str(standard)
+
+    async def _setup_graphql(self):
+        self.api.include_router(
+            GraphQLRouter(self.graphql_schema, context_getter=lambda: {"db": self.db}),
+            prefix=r"/graphql",
+        )
 
     async def _startup(self) -> None:
         await self.db.connect()
