@@ -61,7 +61,7 @@ class MyDb(pydantic.BaseModel):
         )
         return [file for (file,) in result.all()]
 
-    async def get_standard(self, numdos: str) -> Standard:
+    async def get_standard(self, numdos: str) -> Standard | None:
         session: AsyncSession = await self.get_session()
         result: Result[tuple[Standard, ...]] = await session.execute(
             select(Standard)
@@ -73,7 +73,7 @@ class MyDb(pydantic.BaseModel):
         except AttributeError:
             return None
 
-    async def get_file(self, numdos: str = "", numdosvl: str = "") -> File:
+    async def get_file(self, numdos: str = "", numdosvl: str = "") -> File | None:
         session: AsyncSession = await self.get_session()
         result: Result[tuple[File, ...]] = await session.execute(
             select(File)

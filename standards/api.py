@@ -1,10 +1,11 @@
+from typing import Any
 import pydantic
 from fastapi import FastAPI
 import strawberry
 from strawberry.fastapi import GraphQLRouter
 from ._private.pydantic import Config as _PydanticConfig
 from .db import MyDb
-from .db.models import Standard
+from .db.models import File, Standard
 
 
 __all__: list[str] = ["start_api", "MyAPI"]
@@ -41,9 +42,24 @@ class MyAPI(pydantic.BaseModel):
             return f"Hello {name.title()}!"
 
         @self.api.get("/standard/{numdos}")
-        async def get_standard(numdos: str) -> str:
+        async def get_standard(numdos: str) -> dict[str, Any]:
             standard: Standard | None = await self.db.get_standard(numdos)
-            return str(standard)
+            return {**standard} if standard else {}
+
+        @self.api.get("/standards")
+        async def get_standards() -> list[dict[str, Any]]:
+            standards: list[Standard] = await self.db.get_standards()
+            return [{**standard} for standard in standards]
+
+        @self.api.get("/file")
+        async def get_file(numdos: str, numdosvl: str) -> dict[str, Any]:
+            file: File | None = await self.db.get_file(numdos, numdosvl)
+            return {**file} if file else {}
+
+        @self.api.get("/files")
+        async def get_files() -> list[dict[str, Any]]:
+            files: list[File] = await self.db.get_files()
+            return [{**file} for file in files]
 
     async def _setup_graphql(self):
         self.api.include_router(

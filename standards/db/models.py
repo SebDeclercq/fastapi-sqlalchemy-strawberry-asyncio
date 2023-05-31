@@ -1,9 +1,8 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import ClassVar, Iterable
+from typing import Any
 from sqlalchemy import CheckConstraint, Column, ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from traitlets import Any
 
 
 __all__: list[str] = ["Base", "File", "Standard"]
