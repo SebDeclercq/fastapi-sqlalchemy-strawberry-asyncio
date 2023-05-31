@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import selectinload
-from .models import Standard
+from .models import File, Standard
 from .._private.pydantic import Config as _PydanticConfig
 from .._private.types import AsyncSessionMaker
 
@@ -47,14 +47,41 @@ class MyDb(pydantic.BaseModel):
     async def close(self) -> None:
         ...
 
+    async def get_standards(self) -> list[Standard]:
+        session: AsyncSession = await self.get_session()
+        result: Result[tuple[Standard, ...]] = await session.execute(
+            select(Standard).options(selectinload(Standard.files))
+        )
+        return [std for (std,) in result.all()]
+
+    async def get_files(self) -> list[File]:
+        session: AsyncSession = await self.get_session()
+        result: Result[tuple[File, ...]] = await session.execute(
+            select(File).options(selectinload(File.standard))
+        )
+        return [file for (file,) in result.all()]
+
     async def get_standard(self, numdos: str) -> Standard:
         session: AsyncSession = await self.get_session()
-        standard: Result = await session.execute(
+        result: Result[tuple[Standard, ...]] = await session.execute(
             select(Standard)
             .options(selectinload(Standard.files))
             .where(Standard.numdos == numdos)
         )
         try:
-            return standard.scalars().first()
+            return result.scalars().first()
+        except AttributeError:
+            return None
+
+    async def get_file(self, numdos: str = "", numdosvl: str = "") -> File:
+        session: AsyncSession = await self.get_session()
+        result: Result[tuple[File, ...]] = await session.execute(
+            select(File)
+            .options(selectinload(File.standard))
+            .where(File.numdos == numdos)
+            .where(File.numdosvl == numdosvl)
+        )
+        try:
+            return result.scalars().first()
         except AttributeError:
             return None
