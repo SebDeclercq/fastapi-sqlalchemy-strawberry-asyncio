@@ -9,7 +9,7 @@ from .._private.enum import FileFormat, FileLanguage
 __all__: list[str] = ["Base", "File", "Standard"]
 
 
-class Base(DeclarativeBase):
+class Base(DeclarativeBase):  # pragma: no cover
     """
     Base class for SQLAlchemy models.
 
@@ -72,7 +72,7 @@ class Standard(Base):
     def keys(self) -> list[str]:
         return ["numdos", "files"]
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return f"Standard(numdos={self.numdos}, files={self.files})"
 
 
@@ -113,7 +113,7 @@ class File(Base):
     def keys(self) -> list[str]:
         return ["id", "name", "numdos", "numdosvl", "standard", "format", "language"]
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return (
             f"File(numdos={self.numdos}, numdosvl={self.numdosvl}, name={self.name}, "
             f"format={self.format}, language={self.language})"
