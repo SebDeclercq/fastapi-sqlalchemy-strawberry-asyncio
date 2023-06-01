@@ -1,5 +1,6 @@
 from __future__ import annotations
 import strawberry
+from .._private.enum import FileFormat, FileLanguage
 
 
 @strawberry.type
@@ -27,6 +28,8 @@ class FileType:
         numdosvl: The numdosvl attribute of the file type.
         numdos: The numdos attribute of the file type.
         standard: The associated standard type.
+        format: The file format of the file type.
+        language: The language of the file type.
     """
 
     id: int
@@ -34,3 +37,5 @@ class FileType:
     numdosvl: str
     numdos: str
     standard: StandardType
+    format: strawberry.enum(FileFormat)
+    language: strawberry.enum(FileLanguage)
