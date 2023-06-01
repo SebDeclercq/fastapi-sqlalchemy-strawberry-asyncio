@@ -11,7 +11,7 @@ from faker import Faker
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
 from sqlalchemy.orm import selectinload
-from standards.db.models import Base, Standard, File
+from standards.db.models import Base, File, FileFormat, FileLanguage, Standard
 
 
 async def populate_data(async_session: AsyncSession, fake: Faker) -> None:
@@ -40,6 +40,8 @@ async def populate_data(async_session: AsyncSession, fake: Faker) -> None:
                     + random.choice([standard.numdos[1], "E"])
                     + standard.numdos[2:],
                     numdos=standard.numdos,
+                    format=random.choice(list(FileFormat)),
+                    language=random.choice(list(FileLanguage)),
                 )
                 standard.files.append(file)
 

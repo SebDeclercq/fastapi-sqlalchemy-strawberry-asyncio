@@ -3,6 +3,7 @@ from abc import abstractmethod
 from typing import Any
 from sqlalchemy import CheckConstraint, Column, ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from .._private.enum import FileFormat, FileLanguage
 
 
 __all__: list[str] = ["Base", "File", "Standard"]
@@ -85,6 +86,8 @@ class File(Base):
         numdosvl: The numdosvl column of the file.
         numdos: The numdos column of the file.
         standard: The relationship to the standard associated with the file.
+        format: The format of the file, one of FileFormat.
+        language: The language of the file, one of FileLanguage.
     """
 
     __tablename__: str = "files"
@@ -94,6 +97,8 @@ class File(Base):
     numdosvl: Mapped[str]
     numdos: Mapped[str] = mapped_column(ForeignKey("standards.numdos"))
     standard: Mapped[Standard] = relationship(back_populates="files")
+    format: Mapped[FileFormat]
+    language: Mapped[FileLanguage]
 
     __table_args__: tuple[CheckConstraint, ...] = tuple(
         CheckConstraint(
@@ -106,7 +111,10 @@ class File(Base):
     )
 
     def keys(self) -> list[str]:
-        return ["id", "name", "numdos", "numdosvl", "standard"]
+        return ["id", "name", "numdos", "numdosvl", "standard", "format", "language"]
 
     def __repr__(self) -> str:
-        return f"File(numdos={self.numdos}, numdosvl={self.numdosvl}, name={self.name})"
+        return (
+            f"File(numdos={self.numdos}, numdosvl={self.numdosvl}, name={self.name}, "
+            f"format={self.format}, language={self.language})"
+        )
