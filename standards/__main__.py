@@ -11,6 +11,12 @@ __all__: list[str] = ["main"]
 
 
 async def main() -> FastAPI:
+    """
+    Main function to start the FastAPI application.
+
+    Returns:
+        FastAPI: The initialized FastAPI application.
+    """
     api: FastAPI = FastAPI()
 
     db_url: str = os.getenv("DB_URL", "sqlite+aiosqlite://")

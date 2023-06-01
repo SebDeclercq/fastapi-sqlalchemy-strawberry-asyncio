@@ -9,19 +9,56 @@ __all__: list[str] = ["Base", "File", "Standard"]
 
 
 class Base(DeclarativeBase):
+    """
+    Base class for SQLAlchemy models.
+
+    Provides common methods and attributes for models.
+    """
+
     def __iter__(self):
+        """
+        Iterates over the model attributes.
+
+        Yields:
+            A tuple containing the attribute name and its value.
+        """
         for key in self.keys():
             yield key, getattr(self, key)
 
-    def __getitem__(self, item: Any) -> Any:
+    def __getitem__(self, item: str) -> Any:
+        """
+        Retrieves the value of an attribute using the subscript notation.
+
+        Args:
+            item: The attribute name.
+
+        Returns:
+            The value of the attribute.
+        """
         return getattr(self, item)
 
     @abstractmethod
     def keys(self) -> list[str]:
+        """
+        Returns a list of attribute names for the model.
+
+        This method must be implemented by subclasses.
+
+        Returns:
+            A list of attribute names.
+        """
         raise NotImplemented()
 
 
 class Standard(Base):
+    """
+    Represents a standard in the database.
+
+    Attributes:
+        numdos: The numdos column of the standard.
+        files: The relationship to the files associated with the standard.
+    """
+
     __tablename__: str = "standards"
 
     numdos: Column = Column(
@@ -39,6 +76,17 @@ class Standard(Base):
 
 
 class File(Base):
+    """
+    Represents a file in the database.
+
+    Attributes:
+        id: The ID column of the file.
+        name: The name column of the file.
+        numdosvl: The numdosvl column of the file.
+        numdos: The numdos column of the file.
+        standard: The relationship to the standard associated with the file.
+    """
+
     __tablename__: str = "files"
 
     id: Mapped[int] = mapped_column(primary_key=True)
