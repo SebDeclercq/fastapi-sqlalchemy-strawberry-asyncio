@@ -10,7 +10,7 @@ from .graphql import get_schema
 __all__: list[str] = ["main"]
 
 
-async def main() -> FastAPI:
+async def main() -> MyApp:
     """
     Main function to start the FastAPI application.
 

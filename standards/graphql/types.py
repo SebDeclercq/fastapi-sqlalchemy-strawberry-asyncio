@@ -37,5 +37,5 @@ class FileType:
     numdosvl: str
     numdos: str
     standard: StandardType
-    format: strawberry.enum(FileFormat)
-    language: strawberry.enum(FileLanguage)
+    format: strawberry.enum(FileFormat)  # type: ignore # mypy's wrong
+    language: strawberry.enum(FileLanguage)  # type: ignore # mypy's wrong

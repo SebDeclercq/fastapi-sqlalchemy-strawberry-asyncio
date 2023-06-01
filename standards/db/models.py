@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import Any
+from typing import Any, Iterable
 from sqlalchemy import CheckConstraint, Column, ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from .._private.enum import FileFormat, FileLanguage
@@ -48,7 +48,7 @@ class Base(DeclarativeBase):
         Returns:
             A list of attribute names.
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class Standard(Base):
@@ -100,7 +100,7 @@ class File(Base):
     format: Mapped[FileFormat]
     language: Mapped[FileLanguage]
 
-    __table_args__: tuple[CheckConstraint, ...] = tuple(
+    __table_args__: Iterable[Column] = tuple(
         CheckConstraint(
             r"""
             (SUBSTRING(numdosvl, 1, 1) || substring(numdosvl, 3))

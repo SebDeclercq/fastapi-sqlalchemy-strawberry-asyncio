@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Any
 import pydantic
 from fastapi import FastAPI
@@ -30,7 +31,7 @@ class MyApp(pydantic.BaseModel):
     @classmethod
     async def start(
         cls, fastapi: FastAPI, db: MyDb, schema: strawberry.Schema
-    ) -> FastAPI:
+    ) -> MyApp:
         """
         Start the application and return the FastAPI instance.
 
@@ -44,7 +45,7 @@ class MyApp(pydantic.BaseModel):
         """
         self: MyApp = cls(api=fastapi, db=db, graphql_schema=schema)
         await self.setup()
-        return self  # type: ignore # mypy shouldn't warn with MyAPI.__call__
+        return self
 
     def __call__(self) -> FastAPI:
         """
@@ -75,7 +76,7 @@ class MyApp(pydantic.BaseModel):
         Setup routes for the API endpoints.
         """
 
-        @self.api.get("/hello/{name}")
+        @self.api.get(r"/hello/{name}")
         async def hello(name: str = "stranger") -> str:
             """
             Endpoint: /hello/{name}
@@ -90,7 +91,7 @@ class MyApp(pydantic.BaseModel):
             """
             return f"Hello {name.title()}!"
 
-        @self.api.get("/standard/{numdos}")
+        @self.api.get(r"/standard/{numdos}")
         async def get_standard(numdos: str) -> dict[str, Any]:
             """
             Endpoint: /standard/{numdos}
@@ -107,7 +108,7 @@ class MyApp(pydantic.BaseModel):
             standard: Standard | None = await self.db.get_standard(numdos)
             return {**standard} if standard else {}
 
-        @self.api.get("/standards")
+        @self.api.get(r"/standards")
         async def get_standards() -> list[dict[str, Any]]:
             """
             Endpoint: /standards
@@ -120,7 +121,7 @@ class MyApp(pydantic.BaseModel):
             standards: list[Standard] = await self.db.get_standards()
             return [{**standard} for standard in standards]
 
-        @self.api.get("/file")
+        @self.api.get(r"/file")
         async def get_file(numdos: str, numdosvl: str) -> dict[str, Any]:
             """
             Endpoint: /file
@@ -137,7 +138,7 @@ class MyApp(pydantic.BaseModel):
             file: File | None = await self.db.get_file(numdos, numdosvl)
             return {**file} if file else {}
 
-        @self.api.get("/files")
+        @self.api.get(r"/files")
         async def get_files() -> list[dict[str, Any]]:
             """
             Endpoint: /files
