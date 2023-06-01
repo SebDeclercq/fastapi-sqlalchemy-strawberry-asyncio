@@ -14,13 +14,7 @@ from .._private.pydantic import Config as _PydanticConfig
 from .._private.types import AsyncSessionMaker
 
 
-__all__: list[str] = ["MyDb", "start_db"]
-
-
-async def start_db(db_url: str) -> MyDb:
-    db: MyDb = MyDb(db_url=db_url)
-    await db.connect()
-    return db
+__all__: list[str] = ["MyDb"]
 
 
 class MyDb(pydantic.BaseModel):
@@ -30,6 +24,12 @@ class MyDb(pydantic.BaseModel):
     expire_on_commit: bool = False
 
     Config = _PydanticConfig
+
+    @classmethod
+    async def start(cls, db_url: str) -> MyDb:
+        self: MyDb = cls(db_url=db_url)
+        await self.connect()
+        return self
 
     async def connect(self) -> Self:
         self.engine: AsyncEngine = create_async_engine(self.db_url)

@@ -8,13 +8,7 @@ from .db import MyDb
 from .db.models import File, Standard
 
 
-__all__: list[str] = ["start_app", "MyApp"]
-
-
-async def start_app(fastapi: FastAPI, db: MyDb, schema: strawberry.Schema) -> FastAPI:
-    api: MyApp = MyApp(api=fastapi, db=db, graphql_schema=schema)
-    await api.setup()
-    return api  # type: ignore # this isn't true with MyAPI.__call__
+__all__: list[str] = ["MyApp"]
 
 
 class MyApp(pydantic.BaseModel):
@@ -23,6 +17,14 @@ class MyApp(pydantic.BaseModel):
     graphql_schema: strawberry.Schema
 
     Config = _PydanticConfig
+
+    @classmethod
+    async def start(
+        cls, fastapi: FastAPI, db: MyDb, schema: strawberry.Schema
+    ) -> FastAPI:
+        self: MyApp = cls(api=fastapi, db=db, graphql_schema=schema)
+        await self.setup()
+        return self  # type: ignore # mypy shouldn't warn with MyAPI.__call__
 
     def __call__(self) -> FastAPI:
         return self.api
