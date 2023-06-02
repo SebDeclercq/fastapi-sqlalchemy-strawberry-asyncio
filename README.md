@@ -90,9 +90,9 @@ The project has the following structure:
     - `enum.py`: Module defining custom enumeration classes.
     - `pydantic.py`: Module defining Pydantic configuration.
     - `types.py`: Module defining custom type aliases and type hints.
-  - commands/  # Module for defining CLI commands.
-    - `__init__.py`  # Initialization file for the commands module.
-    - `random_populate.py`  # Module defining the random_populate command
+  - `commands/`: Module for defining CLI commands.
+    - `__init__.py`: Initialization file for the commands module.
+    - `random_populate.py`: Module defining the random_populate command
   - `db/`: Module for working with the database.
     - `__init__.py`: Initialization file for the database module.
     - `models.py`: Module defining database models for standards and files.
