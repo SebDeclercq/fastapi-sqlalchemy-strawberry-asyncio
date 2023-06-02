@@ -1,15 +1,11 @@
 import asyncio
 import os
 import pydantic
-import strawberry
 import typer
 import uvicorn
-from fastapi import FastAPI
 from ._private.pydantic import Config as _PydanticConfig
-from .app import MyApp
 from .commands.random_populate import random_populate
-from .db import MyDb
-from .graphql import get_schema
+from .commands.runserver import runserver
 
 __all__: list[str] = ["main"]
 
@@ -27,19 +23,15 @@ class StandardsCLI(pydantic.BaseModel):
         port: int = typer.Option(
             8000, "--port", "-p", help="Port for the server to listen on"
         ),
+        db_url: str = typer.Option(
+            os.getenv("DB_URL", ""), help="URL to access database"
+        ),
     ) -> None:
         uvicorn.run(
-            asyncio.run(self._runserver()),
+            asyncio.run(runserver(db_url=db_url)),
             host=host,
             port=port,
         )
-
-    async def _runserver(self) -> MyApp:
-        api: FastAPI = FastAPI()
-        db_url: str = os.getenv("DB_URL", "sqlite+aiosqlite://")
-        db: MyDb = await MyDb.start(db_url=db_url)
-        schema: strawberry.Schema = get_schema()
-        return await MyApp.start(api, db, schema)
 
     def random_populate(
         self,
