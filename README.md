@@ -1,4 +1,4 @@
-# My Project
+# Standards
 
 This project is a web application developed using Python and FastAPI. It provides a GraphQL endpoint for accessing standards and files. The application interacts with a database using the `MyDb` class to retrieve and store data.
 
@@ -9,13 +9,52 @@ This project is a web application developed using Python and FastAPI. It provide
 
 ## Usage
 
-The project provides a main module `__main__.py` that can be executed to start the FastAPI application. The `main()` function initializes the application and returns the FastAPI instance.
+### Standards CLI
 
-To start the application, run the following command:
+A command-line interface (CLI) tool for the Standards package.
 
-`python -m standards`
+To run the Standards CLI, use the following command:
 
-The application will start running on a local server at `http://localhost:8000`.
+```shell
+python -m standards [command]
+```
+
+Replace `[command]` with one of the available commands described below.
+
+#### Commands
+
+- **runserver**
+
+Command to start the server using uvicorn.
+
+Usage:
+
+```shell
+python -m standards runserver
+```
+
+Options:
+
+- `--host <host:str>`: The host address to bind the server (default: 0.0.0.0).
+- `--port <port:int>`: The port number to bind the server (default: 8000).
+
+The application will start running on a local server at `http://0.0.0.0:8000` by default.
+
+- **random_populate**
+
+Command to populate the database with random data.
+
+Usage:
+
+```shell
+python -m standards random_populate
+```
+
+Options:
+
+- `--db-url <db_url:str>`: The URL of the database to populate.
+- `--count <count:int>`: The number of records to populate (default: 10).
+
 
 ## Website Functionality
 
