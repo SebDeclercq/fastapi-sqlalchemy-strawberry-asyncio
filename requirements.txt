@@ -3,5 +3,6 @@ fastapi
 httpx
 ipython
 strawberry-graphql[fastapi]
+typer[all]
 uvicorn[standard]
 SQLAlchemy
