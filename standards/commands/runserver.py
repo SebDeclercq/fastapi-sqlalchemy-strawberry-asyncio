@@ -5,6 +5,9 @@ from ..db import MyDb
 from ..graphql import get_schema
 
 
+__all__: list[str] = ["runserver"]
+
+
 async def runserver(db_url: str) -> MyApp:
     api: FastAPI = FastAPI()
     db: MyDb = await MyDb.start(db_url=db_url)

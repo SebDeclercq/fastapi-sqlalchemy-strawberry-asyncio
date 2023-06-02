@@ -4,10 +4,9 @@ import pydantic
 import typer
 import uvicorn
 from ._private.pydantic import Config as _PydanticConfig
-from .commands.random_populate import random_populate
-from .commands.runserver import runserver
+from .commands import random_populate, runserver
 
-__all__: list[str] = ["main"]
+__all__: list[str] = []
 
 
 class StandardsCLI(pydantic.BaseModel):
